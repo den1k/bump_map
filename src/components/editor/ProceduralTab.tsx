@@ -106,6 +106,149 @@ expr:
   dist = Math.sqrt((u-0.5)**2 + (v-0.5)**2);
   shade = 0.5 + 0.5 * Math.sin(2 * Math.PI * dist * 8);
 ` },
+      { label: 'White Noise', dsl: `engine: math
+size: 512x512
+seed: 1
+background: 0.5
+repeat: tile
+post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+
+[math]
+coords=uv
+scale=1.0
+rotate=0
+translate=0.0,0.0
+period=32,32
+expr:
+  // Simple pseudo-random noise
+  x = Math.floor(u * period_x);
+  y = Math.floor(v * period_y);
+  hash = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+  shade = (hash - Math.floor(hash));
+` },
+      { label: 'Smooth Noise', dsl: `engine: math
+size: 512x512
+seed: 1
+background: 0.5
+repeat: tile
+post: blur=2.0, edge_blur=0.0, contrast=1.2, gamma=1.0
+
+[math]
+coords=uv
+scale=1.0
+rotate=0
+translate=0.0,0.0
+period=8,8
+expr:
+  // Value noise with bilinear interpolation
+  x = u * period_x;
+  y = v * period_y;
+  x0 = Math.floor(x); y0 = Math.floor(y);
+  x1 = x0 + 1; y1 = y0 + 1;
+  fx = x - x0; fy = y - y0;
+  // Smoothstep interpolation
+  fx = fx * fx * (3 - 2 * fx);
+  fy = fy * fy * (3 - 2 * fy);
+  // Hash function for random values
+  h00 = Math.sin(x0 * 12.9898 + y0 * 78.233) * 43758.5453;
+  h10 = Math.sin(x1 * 12.9898 + y0 * 78.233) * 43758.5453;
+  h01 = Math.sin(x0 * 12.9898 + y1 * 78.233) * 43758.5453;
+  h11 = Math.sin(x1 * 12.9898 + y1 * 78.233) * 43758.5453;
+  v00 = h00 - Math.floor(h00);
+  v10 = h10 - Math.floor(h10);
+  v01 = h01 - Math.floor(h01);
+  v11 = h11 - Math.floor(h11);
+  // Bilinear interpolation
+  v0 = v00 * (1 - fx) + v10 * fx;
+  v1 = v01 * (1 - fx) + v11 * fx;
+  shade = v0 * (1 - fy) + v1 * fy;
+` },
+      { label: 'Clouds', dsl: `engine: math
+size: 512x512
+seed: 1
+background: 0.5
+repeat: tile
+post: blur=1.0, edge_blur=0.0, contrast=1.3, gamma=1.0
+
+[math]
+coords=uv
+scale=1.0
+rotate=0
+translate=0.0,0.0
+period=16,16
+expr:
+  // Fractal Brownian Motion (FBM) - layered noise
+  function noise(x, y, freq) {
+    x = x * freq; y = y * freq;
+    x0 = Math.floor(x); y0 = Math.floor(y);
+    fx = x - x0; fy = y - y0;
+    fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+    h00 = Math.sin(x0 * 12.9898 + y0 * 78.233) * 43758.5453;
+    h10 = Math.sin((x0+1) * 12.9898 + y0 * 78.233) * 43758.5453;
+    h01 = Math.sin(x0 * 12.9898 + (y0+1) * 78.233) * 43758.5453;
+    h11 = Math.sin((x0+1) * 12.9898 + (y0+1) * 78.233) * 43758.5453;
+    v00 = h00 - Math.floor(h00);
+    v10 = h10 - Math.floor(h10);
+    v01 = h01 - Math.floor(h01);
+    v11 = h11 - Math.floor(h11);
+    v0 = v00 * (1-fx) + v10 * fx;
+    v1 = v01 * (1-fx) + v11 * fx;
+    return v0 * (1-fy) + v1 * fy;
+  }
+  // Layer multiple octaves
+  value = 0;
+  amplitude = 1.0;
+  frequency = 1.0;
+  for (let i = 0; i < 4; i++) {
+    value += noise(u, v, frequency) * amplitude;
+    frequency *= 2.0;
+    amplitude *= 0.5;
+  }
+  shade = value / 2.0;
+` },
+      { label: 'Turbulence', dsl: `engine: math
+size: 512x512
+seed: 1
+background: 0.5
+repeat: tile
+post: blur=0.5, edge_blur=0.0, contrast=1.5, gamma=1.0
+
+[math]
+coords=uv
+scale=1.0
+rotate=0
+translate=0.0,0.0
+period=16,16
+expr:
+  // Turbulence using absolute noise
+  function noise(x, y, freq) {
+    x = x * freq; y = y * freq;
+    x0 = Math.floor(x); y0 = Math.floor(y);
+    fx = x - x0; fy = y - y0;
+    fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+    h00 = Math.sin(x0 * 12.9898 + y0 * 78.233) * 43758.5453;
+    h10 = Math.sin((x0+1) * 12.9898 + y0 * 78.233) * 43758.5453;
+    h01 = Math.sin(x0 * 12.9898 + (y0+1) * 78.233) * 43758.5453;
+    h11 = Math.sin((x0+1) * 12.9898 + (y0+1) * 78.233) * 43758.5453;
+    v00 = h00 - Math.floor(h00);
+    v10 = h10 - Math.floor(h10);
+    v01 = h01 - Math.floor(h01);
+    v11 = h11 - Math.floor(h11);
+    v0 = v00 * (1-fx) + v10 * fx;
+    v1 = v01 * (1-fx) + v11 * fx;
+    return v0 * (1-fy) + v1 * fy;
+  }
+  // Absolute value creates turbulence
+  value = 0;
+  amplitude = 1.0;
+  frequency = 1.0;
+  for (let i = 0; i < 5; i++) {
+    value += Math.abs(noise(u, v, frequency) - 0.5) * amplitude;
+    frequency *= 2.0;
+    amplitude *= 0.5;
+  }
+  shade = value;
+` },
     ],
   },
   {

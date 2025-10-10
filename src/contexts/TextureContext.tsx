@@ -18,6 +18,8 @@ interface TextureContextType {
   setProceduralDsl: (dsl: string) => void;
   proceduralRepeat: 'tile' | 'clamp';
   setProceduralRepeat: (repeat: 'tile' | 'clamp') => void;
+  editorMode: 'draw' | 'procedural';
+  setEditorMode: (mode: 'draw' | 'procedural') => void;
 }
 
 const TextureContext = createContext<TextureContextType | undefined>(undefined);
@@ -48,6 +50,7 @@ export function TextureProvider({ children }: { children: ReactNode }) {
   const canvasSize = 512; // Fixed canvas resolution
   const [proceduralDsl, setProceduralDsl] = useState<string>('');
   const [proceduralRepeat, setProceduralRepeat] = useState<'tile' | 'clamp'>('tile');
+  const [editorMode, setEditorMode] = useState<'draw' | 'procedural'>('procedural');
 
   const updateTexture = useCallback((imageData: ImageData) => {
     // Check if texture has any non-neutral content
@@ -113,6 +116,8 @@ export function TextureProvider({ children }: { children: ReactNode }) {
         setProceduralDsl,
         proceduralRepeat,
         setProceduralRepeat,
+        editorMode,
+        setEditorMode,
       }}
     >
       {children}

@@ -7,9 +7,8 @@ import useThrottle from '@/hooks/useThrottle';
 import ProceduralTab from './ProceduralTab';
 
 export default function TextureEditor() {
-  const [mode, setMode] = useState<'draw' | 'procedural'>('procedural');
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { canvasSize, brushSettings, updateTexture } = useTexture();
+  const { canvasSize, brushSettings, updateTexture, editorMode: mode, setEditorMode: setMode } = useTexture();
   const { addToHistory, undo, redo, canUndo, canRedo } = useTextureHistory();
   const isDrawingRef = useRef(false);
   const strokeStartedRef = useRef(false);
@@ -227,20 +226,6 @@ export default function TextureEditor() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 px-4 py-2 bg-white border-b border-gray-300">
-        <button
-          onClick={() => setMode('draw')}
-          className={`px-3 py-1 rounded text-sm ${mode === 'draw' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-        >
-          Canvas
-        </button>
-        <button
-          onClick={() => setMode('procedural')}
-          className={`px-3 py-1 rounded text-sm ${mode === 'procedural' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-        >
-          Procedural
-        </button>
-      </div>
       <div className="flex-1 flex items-center justify-center bg-gray-100 p-4">
         {mode === 'draw' ? (
         <canvas

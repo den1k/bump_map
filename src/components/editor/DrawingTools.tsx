@@ -5,7 +5,7 @@ import { useTexture } from '@/contexts/TextureContext';
 import { DrawingTool } from '@/types';
 
 export default function DrawingTools() {
-  const { brushSettings, updateBrushSettings } = useTexture();
+  const { brushSettings, updateBrushSettings, editorMode } = useTexture();
 
   // Set default brush color to white (push out) for better UX
   React.useEffect(() => {
@@ -25,6 +25,11 @@ export default function DrawingTools() {
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateBrushSettings({ color: parseInt(e.target.value) });
   };
+
+  // Only show drawing tools in Canvas mode
+  if (editorMode !== 'draw') {
+    return null;
+  }
 
   return (
     <div className="p-2 bg-white border-b border-gray-300">

@@ -2,6 +2,7 @@
 
 import { TextureProvider } from '@/contexts/TextureContext';
 import TextureEditor from '@/components/editor/TextureEditor';
+import ModeSelector from '@/components/editor/ModeSelector';
 import DrawingTools from '@/components/editor/DrawingTools';
 import ImportExport from '@/components/editor/ImportExport';
 import Scene3D from '@/components/viewer/Scene3D';
@@ -26,6 +27,7 @@ export default function Home() {
         <div className="flex-1 flex overflow-hidden">
           {/* Left Panel - 2D Editor */}
           <div className="w-1/2 flex flex-col border-r border-gray-300">
+            <ModeSelector />
             <DrawingTools />
             <div className="flex-1 overflow-hidden">
               <TextureEditor />
