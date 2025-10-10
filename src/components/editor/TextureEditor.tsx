@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useTexture } from '@/contexts/TextureContext';
 import useTextureHistory from '@/hooks/useTextureHistory';
 import useThrottle from '@/hooks/useThrottle';
+import ProceduralTab from './ProceduralTab';
 
 export default function TextureEditor() {
+  const [mode, setMode] = useState<'draw' | 'procedural'>('procedural');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { canvasSize, brushSettings, updateTexture } = useTexture();
   const { addToHistory, undo, redo, canUndo, canRedo } = useTextureHistory();
@@ -15,7 +17,7 @@ export default function TextureEditor() {
   // Throttle texture updates to 60fps max for performance
   const throttledUpdateTexture = useThrottle(updateTexture, 16); // ~60fps
 
-  // Initialize canvas as transparent (no displacement by default)
+  // Initialize canvas as white (no displacement by default)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -23,13 +25,13 @@ export default function TextureEditor() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Create imageData with EXACT neutral values
+    // Create imageData with EXACT white values
     const imageData = ctx.createImageData(canvasSize, canvasSize);
-    // Fill entire image with exactly 128 (neutral)
+    // Fill entire image with exactly 255 (white)
     for (let i = 0; i < imageData.data.length; i += 4) {
-      imageData.data[i] = 128;     // R - exactly 128
-      imageData.data[i + 1] = 128; // G - exactly 128
-      imageData.data[i + 2] = 128; // B - exactly 128
+      imageData.data[i] = 255;     // R - exactly 255
+      imageData.data[i + 1] = 255; // G - exactly 255
+      imageData.data[i + 2] = 255; // B - exactly 255
       imageData.data[i + 3] = 255; // A - fully opaque
     }
     
@@ -95,12 +97,12 @@ export default function TextureEditor() {
 
     // Update texture data (throttled for performance)
     const imageData = ctx.getImageData(0, 0, canvasSize, canvasSize);
-    // Convert transparent pixels to neutral gray for displacement
+    // Convert transparent pixels to white for no displacement
     for (let i = 0; i < imageData.data.length; i += 4) {
       if (imageData.data[i + 3] === 0) { // If transparent
-        imageData.data[i] = 128;     // R
-        imageData.data[i + 1] = 128; // G
-        imageData.data[i + 2] = 128; // B
+        imageData.data[i] = 255;     // R
+        imageData.data[i + 1] = 255; // G
+        imageData.data[i + 2] = 255; // B
         imageData.data[i + 3] = 255; // A
       }
     }
@@ -207,12 +209,12 @@ export default function TextureEditor() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Create fresh imageData with exact neutral values
+    // Create fresh imageData with exact white values
     const imageData = ctx.createImageData(canvasSize, canvasSize);
     for (let i = 0; i < imageData.data.length; i += 4) {
-      imageData.data[i] = 128;     // R - exactly 128
-      imageData.data[i + 1] = 128; // G - exactly 128
-      imageData.data[i + 2] = 128; // B - exactly 128
+      imageData.data[i] = 255;     // R - exactly 255
+      imageData.data[i + 1] = 255; // G - exactly 255
+      imageData.data[i + 2] = 255; // B - exactly 255
       imageData.data[i + 3] = 255; // A - fully opaque
     }
     
@@ -225,7 +227,22 @@ export default function TextureEditor() {
 
   return (
     <div className="flex flex-col h-full">
+      <div className="flex items-center gap-2 px-4 py-2 bg-white border-b border-gray-300">
+        <button
+          onClick={() => setMode('draw')}
+          className={`px-3 py-1 rounded text-sm ${mode === 'draw' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+        >
+          Canvas
+        </button>
+        <button
+          onClick={() => setMode('procedural')}
+          className={`px-3 py-1 rounded text-sm ${mode === 'procedural' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+        >
+          Procedural
+        </button>
+      </div>
       <div className="flex-1 flex items-center justify-center bg-gray-100 p-4">
+        {mode === 'draw' ? (
         <canvas
           ref={canvasRef}
           width={canvasSize}
@@ -242,6 +259,11 @@ export default function TextureEditor() {
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseLeave}
         />
+        ) : (
+          <div className="w-full">
+            <ProceduralTab />
+          </div>
+        )}
       </div>
       <div className="p-4 bg-white border-t border-gray-300">
         <h3 className="text-sm font-semibold mb-3">Canvas Actions</h3>
@@ -272,7 +294,7 @@ export default function TextureEditor() {
           <button
             onClick={clearCanvas}
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            title="Clear canvas to transparent (no displacement)"
+            title="Clear canvas to white (no displacement)"
           >
             🗑️ Clear
           </button>

@@ -7,15 +7,19 @@ import ImportExport from '@/components/editor/ImportExport';
 import Scene3D from '@/components/viewer/Scene3D';
 import ModelSelector from '@/components/viewer/ModelSelector';
 import ControlPanel from '@/components/viewer/ControlPanel';
+import Link from 'next/link';
 
 export default function Home() {
   return (
     <TextureProvider>
       <div className="flex flex-col h-screen bg-gray-100">
         {/* Header */}
-        <header className="bg-gray-800 text-white p-4 shadow-md">
-          <h1 className="text-2xl font-bold">Bump Map Texture Editor</h1>
-          <p className="text-sm text-gray-300">Create displacement textures and preview them in 3D</p>
+        <header className="bg-gray-800 text-white p-4 shadow-md flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold">Bump Map Texture Editor</h1>
+            <p className="text-sm text-gray-300">Create displacement textures and preview them in 3D</p>
+          </div>
+          <Link href="/docs" className="text-sm hover:underline">Docs</Link>
         </header>
 
         {/* Main Content - Split View */}

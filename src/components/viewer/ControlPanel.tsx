@@ -41,7 +41,7 @@ export default function ControlPanel() {
         <input
           type="range"
           min="16"
-          max="256"
+          max="1024"
           step="16"
           value={displacementSettings.segments}
           onChange={(e) => updateDisplacementSettings({ segments: parseInt(e.target.value) })}

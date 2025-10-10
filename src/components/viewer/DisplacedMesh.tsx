@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
 export default function DisplacedMesh() {
-  const { textureData, displacementSettings, selectedGeometry, hasContent } = useTexture();
+  const { textureData, displacementSettings, selectedGeometry, hasContent, proceduralRepeat } = useTexture();
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
 
@@ -16,33 +16,44 @@ export default function DisplacedMesh() {
 
     const { imageData } = textureData;
     
-    // Extract single channel (grayscale) data and normalize
+    // Extract single channel (grayscale) data, full 0-255 range
     const grayscaleData = new Uint8Array(imageData.width * imageData.height);
-    const neutralValue = 128;
+    const width = imageData.width;
+    const height = imageData.height;
     
+    let sum = 0;
     for (let i = 0; i < imageData.data.length; i += 4) {
       const pixelIndex = i / 4;
       const r = imageData.data[i];
       const a = imageData.data[i + 3];
       
-      // Use exact value for opaque pixels, neutral for transparent
-      grayscaleData[pixelIndex] = (a === 0) ? neutralValue : r;
+      // Full range: white (255) -> 255 (1.0, 0 disp after bias), black (0) -> 0 (0.0, -scale disp), transparent -> 255
+      const value = (a === 0) ? 255 : r;
+      grayscaleData[pixelIndex] = value;
+      sum += value;
     }
     
-    // Create texture using RedFormat (single channel) for better precision
+    // Average for logging (0-1)
+    const average = sum / (width * height * 255);
+    
+    // Create displacement texture
     const texture = new THREE.DataTexture(
       grayscaleData,
-      imageData.width,
-      imageData.height,
+      width,
+      height,
       THREE.RedFormat,
       THREE.UnsignedByteType
     );
     texture.needsUpdate = true;
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
+    texture.wrapS = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+    texture.wrapT = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+    texture.flipY = true;
+    
+    // Store average for logging
+    texture.userData.average = average;
     
     return texture;
-  }, [textureData, hasContent]);
+  }, [textureData, hasContent, proceduralRepeat]);
 
   // Create geometry based on selected type
   const geometry = useMemo(() => {
@@ -50,25 +61,35 @@ export default function DisplacedMesh() {
     
     switch (selectedGeometry) {
       case 'plane':
-        return new THREE.PlaneGeometry(3, 3, segments, segments);
+        return new THREE.PlaneGeometry(10, 10, segments, segments);
       case 'sphere':
-        return new THREE.SphereGeometry(1.5, segments, segments);
+        return new THREE.SphereGeometry(5, segments, segments);
       case 'cylinder':
-        return new THREE.CylinderGeometry(1, 1, 3, segments, segments);
+        return new THREE.CylinderGeometry(5, 5, 10, segments, segments);
       case 'torus':
-        return new THREE.TorusGeometry(1, 0.4, segments / 2, segments);
+        return new THREE.TorusGeometry(5, 2, Math.max(8, Math.floor(segments / 2)), segments);
       case 'cube':
-        return new THREE.BoxGeometry(2, 2, 2, segments, segments, segments);
+        return new THREE.BoxGeometry(10, 10, 10, segments, segments, segments);
       case 'cone':
-        return new THREE.ConeGeometry(1, 2, segments, segments);
+        return new THREE.ConeGeometry(5, 10, segments, segments);
       default:
-        return new THREE.PlaneGeometry(3, 3, segments, segments);
+        return new THREE.PlaneGeometry(10, 10, segments, segments);
     }
   }, [selectedGeometry, displacementSettings.segments]);
 
   // Calculate actual displacement scale and bias
   const actualDisplacementScale = hasContent ? displacementSettings.scale : 0;
-  const actualDisplacementBias = hasContent ? -0.5 * actualDisplacementScale : 0;
+  const avg = displacementTexture?.userData.average ?? 0.5;
+  const actualDisplacementBias = hasContent ? -actualDisplacementScale : 0;  // White (1.0) -> 0 disp, black (0.0) -> -scale
+
+  // Update texture properties when repeat changes
+  useEffect(() => {
+    if (displacementTexture && materialRef.current) {
+      displacementTexture.wrapS = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+      displacementTexture.wrapT = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+      materialRef.current.needsUpdate = true;
+    }
+  }, [displacementTexture, proceduralRepeat]);
 
   // Debug logging
   useEffect(() => {
@@ -77,9 +98,10 @@ export default function DisplacedMesh() {
       textureExists: !!displacementTexture,
       scale: actualDisplacementScale,
       bias: actualDisplacementBias,
-      settingsScale: displacementSettings.scale
+      settingsScale: displacementSettings.scale,
+      average: avg
     });
-  }, [hasContent, displacementTexture, actualDisplacementScale, actualDisplacementBias, displacementSettings.scale]);
+  }, [hasContent, displacementTexture, actualDisplacementScale, actualDisplacementBias, displacementSettings.scale, avg]);
 
   // Update material when settings change
   useEffect(() => {
@@ -94,7 +116,7 @@ export default function DisplacedMesh() {
       materialRef.current.displacementMap = displacementTexture;
       materialRef.current.displacementScale = actualDisplacementScale;
       materialRef.current.displacementBias = actualDisplacementBias;
-      console.log('Applied displacement:', { scale: actualDisplacementScale, bias: actualDisplacementBias });
+      console.log('Applied displacement:', { scale: actualDisplacementScale, average: avg, bias: materialRef.current.displacementBias });
     } else {
       // Completely remove displacement when no content
       materialRef.current.displacementMap = null;
@@ -103,7 +125,7 @@ export default function DisplacedMesh() {
       console.log('Removed displacement');
     }
     materialRef.current.needsUpdate = true;
-  }, [displacementSettings, displacementTexture, hasContent, actualDisplacementScale, actualDisplacementBias]);
+  }, [displacementSettings, displacementTexture, hasContent, actualDisplacementScale, actualDisplacementBias, avg]);
 
   // Optional: gentle rotation for better view
   useFrame(() => {
@@ -117,25 +139,31 @@ export default function DisplacedMesh() {
       {hasContent ? (
         <meshStandardMaterial
           ref={materialRef}
-          color="#d3d3d3"
+          color="#e8e8e8"
           wireframe={displacementSettings.wireframe}
           metalness={displacementSettings.metalness}
           roughness={displacementSettings.roughness}
-          envMapIntensity={1}
+          envMapIntensity={2.5}
           displacementMap={displacementTexture}
           displacementScale={actualDisplacementScale}
           displacementBias={actualDisplacementBias}
           flatShading={false}
+          side={THREE.DoubleSide}
+          // Enhanced properties for better detail visibility
+          emissive="#000000"
+          emissiveIntensity={0}
+          normalMapType={THREE.TangentSpaceNormalMap}
         />
       ) : (
         <meshStandardMaterial
           ref={materialRef}
-          color="#d3d3d3"
+          color="#e8e8e8"
           wireframe={displacementSettings.wireframe}
           metalness={displacementSettings.metalness}
           roughness={displacementSettings.roughness}
-          envMapIntensity={1}
+          envMapIntensity={2.5}
           flatShading={false}
+          side={THREE.DoubleSide}
         />
       )}
     </mesh>

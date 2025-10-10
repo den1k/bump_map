@@ -14,6 +14,10 @@ interface TextureContextType {
   setSelectedGeometry: (geometry: GeometryType) => void;
   canvasSize: number;
   hasContent: boolean;
+  proceduralDsl: string;
+  setProceduralDsl: (dsl: string) => void;
+  proceduralRepeat: 'tile' | 'clamp';
+  setProceduralRepeat: (repeat: 'tile' | 'clamp') => void;
 }
 
 const TextureContext = createContext<TextureContextType | undefined>(undefined);
@@ -25,36 +29,38 @@ export function TextureProvider({ children }: { children: ReactNode }) {
   });
 
   const [displacementSettings, setDisplacementSettings] = useState<DisplacementSettings>({
-    scale: 1.0,
-    segments: 128,
+    scale: 0.2,
+    segments: 256,
     wireframe: false,
-    metalness: 0.8,
-    roughness: 0.05,
+    metalness: 0,
+    roughness: 0.8,
     autoRotate: false,
   });
 
   const [brushSettings, setBrushSettings] = useState<BrushSettings>({
     size: 20,
-    color: 255,
+    color: 0,
     tool: 'brush',
   });
 
   const [selectedGeometry, setSelectedGeometry] = useState<GeometryType>('cube');
   const [hasContent, setHasContent] = useState(false);
   const canvasSize = 512; // Fixed canvas resolution
+  const [proceduralDsl, setProceduralDsl] = useState<string>('');
+  const [proceduralRepeat, setProceduralRepeat] = useState<'tile' | 'clamp'>('tile');
 
   const updateTexture = useCallback((imageData: ImageData) => {
     // Check if texture has any non-neutral content
-    // Only exact 128 is considered neutral (tolerance = 0)
+    // Only exact 255 is considered neutral (tolerance = 0)
     let hasNonNeutralPixels = false;
-    const neutralValue = 128;
+    const neutralValue = 255;
     
     for (let i = 0; i < imageData.data.length; i += 4) {
       const r = imageData.data[i];
       const g = imageData.data[i + 1];
       const b = imageData.data[i + 2];
       
-      // Check if pixel is EXACTLY neutral gray (128, 128, 128)
+      // Check if pixel is EXACTLY white (255, 255, 255)
       if (r !== neutralValue || g !== neutralValue || b !== neutralValue) {
         hasNonNeutralPixels = true;
         console.log('Found non-neutral pixel at index', i/4, ':', {r, g, b});
@@ -77,6 +83,9 @@ export function TextureProvider({ children }: { children: ReactNode }) {
         dataUrl,
       });
     }
+
+    // Reset procedural repeat for non-procedural updates
+    setProceduralRepeat('tile');
   }, []);
 
   const updateDisplacementSettings = useCallback((settings: Partial<DisplacementSettings>) => {
@@ -100,6 +109,10 @@ export function TextureProvider({ children }: { children: ReactNode }) {
         setSelectedGeometry,
         canvasSize,
         hasContent,
+        proceduralDsl,
+        setProceduralDsl,
+        proceduralRepeat,
+        setProceduralRepeat,
       }}
     >
       {children}

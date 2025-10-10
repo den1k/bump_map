@@ -4,8 +4,9 @@ import React, { useRef } from 'react';
 import { useTexture } from '@/contexts/TextureContext';
 
 export default function ImportExport() {
-  const { textureData, updateTexture, canvasSize } = useTexture();
+  const { textureData, updateTexture, canvasSize, proceduralDsl, setProceduralDsl } = useTexture();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dslInputRef = useRef<HTMLInputElement>(null);
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -51,10 +52,31 @@ export default function ImportExport() {
     link.click();
   };
 
+  const handleImportDsl = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (typeof text === 'string') setProceduralDsl(text);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleExportDsl = () => {
+    const blob = new Blob([proceduralDsl || ''], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = `procedural-${Date.now()}.dsl`;
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="p-4 bg-white border-t border-gray-300">
       <h3 className="text-sm font-semibold mb-3">Import / Export</h3>
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <button
           onClick={() => fileInputRef.current?.click()}
           className="flex-1 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -68,12 +90,31 @@ export default function ImportExport() {
         >
           Export PNG
         </button>
+        <button
+          onClick={() => dslInputRef.current?.click()}
+          className="flex-1 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+        >
+          Import DSL
+        </button>
+        <button
+          onClick={handleExportDsl}
+          className="flex-1 px-4 py-2 bg-indigo-700 text-white rounded hover:bg-indigo-800"
+        >
+          Export DSL
+        </button>
       </div>
       <input
         ref={fileInputRef}
         type="file"
         accept="image/png,image/jpeg,image/jpg"
         onChange={handleImport}
+        className="hidden"
+      />
+      <input
+        ref={dslInputRef}
+        type="file"
+        accept=".dsl,text/plain"
+        onChange={handleImportDsl}
         className="hidden"
       />
     </div>
