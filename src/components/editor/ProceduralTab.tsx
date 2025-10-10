@@ -66,7 +66,9 @@ expr:
   amp = 0.4;
   y = 0.5 + amp * Math.sin(2 * Math.PI * freq * u);
   dist = Math.abs(v - y);
-  shade = (dist < 0.02) ? 0.0 : 1.0;
+  // Smooth gradient falloff
+  lineWidth = 0.01;
+  shade = 1.0 - Math.exp(-dist * dist / (2 * lineWidth * lineWidth)) * 0.7;
 ` },
       { label: 'Circle Outline', dsl: `engine: math
 size: 512x512
@@ -518,6 +520,7 @@ export default function ProceduralTab() {
   const translateDebounceRef = React.useRef<number | null>(null);
   const scaleDebounceRef = React.useRef<number | null>(null);
   const isUpdatingFromInteraction = React.useRef(false);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   // Update DSL with translate values
   const updateTranslateInDsl = useCallback((x: number, y: number) => {
@@ -725,6 +728,16 @@ export default function ProceduralTab() {
     return () => { w.terminate(); };
   }, [updateTexture, dsl, setProceduralRepeat]);
 
+  // Initial render on mount (after worker and textarea are ready)
+  React.useEffect(() => {
+    if (!workerRef.current || !textareaRef.current) return;
+    const initialDsl = textareaRef.current.value;
+    setIsRendering(true);
+    setStatus('rendering');
+    workerRef.current.postMessage({ type: 'render', dslText: initialDsl });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only on mount
+
   const handleRender = React.useCallback(() => {
     if (!workerRef.current) return;
     setIsRendering(true);
@@ -750,7 +763,9 @@ export default function ProceduralTab() {
     <div className="p-4 bg-white border-t border-gray-300">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-semibold">Procedural Generator (DSL)</h3>
-        <div className="text-xs text-gray-500">{status}</div>
+        <div className={`text-xs ${status.startsWith('error') ? 'text-red-600 font-semibold' : 'text-gray-500'}`}>
+          {status}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-2 items-center">
