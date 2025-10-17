@@ -6,11 +6,13 @@ export interface CommonHeader {
   seed: number;
   background: number; // 0..1
   repeat: 'tile' | 'clamp';
+  invert: boolean; // invert grayscale values
   post: Partial<PostProcessOptions>;
 }
 
 export interface PostProcessOptions {
   blur: number; // gaussian sigma (px)
+  blur_spread: number; // blur spread factor
   edge_blur: number; // 0..1 blend strength
   contrast: number; // 1.0 = none
   gamma: number; // 1.0 = none

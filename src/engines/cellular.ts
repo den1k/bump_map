@@ -1,5 +1,17 @@
 import { DSLDocument } from '@/dsl/types';
 
+function seededRandom(seed: number): () => number {
+  let state = seed;
+  return () => {
+    state += 0x6D2B79F5;
+    let t = state;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    state = t ^ t >>> 14 >>> 0;
+    return state / 4294967296;
+  };
+}
+
 function countNeighbors(grid: Uint8Array, x: number, y: number, n: number, wrap: boolean, w: number, h: number, kind: 'moore' | 'vonneumann'): number {
   let c = 0;
   for (let dy = -n; dy <= n; dy++) {
@@ -28,10 +40,13 @@ export function renderCellular(doc: DSLDocument): ImageData {
   const w = cells, h = cells;
   let grid = new Uint8Array(w * h);
 
+  const prng = seededRandom(header.seed);
+
   // init
   if (cellular.grid.init.kind === 'rand') {
     const p = cellular.grid.init.p;
-    for (let i = 0; i < grid.length; i++) grid[i] = Math.random() < p ? 1 : 0;
+    const rand = prng;
+    for (let i = 0; i < grid.length; i++) grid[i] = rand() < p ? 1 : 0;
   }
 
   const bornSet = new Set<number>();
@@ -45,7 +60,7 @@ export function renderCellular(doc: DSLDocument): ImageData {
     }
   }
   if (cellular.rules.born) cellular.rules.born.forEach(n => bornSet.add(n));
-  if (cellular.rules.survive) cellular.rules.survive.forEach(n => surviveSet.add(n));
+  if (cellular.rules.survive) cellular.rules.survive?.forEach(n => surviveSet.add(n));
 
   let tmp = new Uint8Array(w * h);
   if (isEca) {
@@ -54,7 +69,7 @@ export function renderCellular(doc: DSLDocument): ImageData {
     const rule = cellular.rules.ecaRule! & 0xff;
     // Ensure first row is initialized
     for (let x = 0; x < w; x++) {
-      if (cellular.grid.init.kind === 'rand') grid[x] = Math.random() < cellular.grid.init.p ? 1 : 0;
+      if (cellular.grid.init.kind === 'rand') grid[x] = prng() < cellular.grid.init.p ? 1 : 0;
     }
     for (let y = 1; y < h; y++) {
       for (let x = 0; x < w; x++) {

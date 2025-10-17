@@ -9,7 +9,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -34,7 +35,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -53,7 +55,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -75,7 +78,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: clamp
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -94,7 +98,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: clamp
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -111,7 +116,8 @@ size: 512x512
 seed: 1
 background: 0.5
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -259,7 +265,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [axiom]
 F+F+F+F
@@ -282,7 +289,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [axiom]
 F--F--F
@@ -305,7 +313,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [axiom]
 FX
@@ -329,7 +338,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [axiom]
 L
@@ -353,7 +363,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [axiom]
 X
@@ -377,7 +388,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [axiom]
 F
@@ -406,7 +418,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=128
@@ -426,7 +439,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=128
@@ -446,7 +460,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=128
@@ -466,7 +481,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=128
@@ -486,7 +502,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=128
@@ -506,7 +523,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=512
@@ -526,7 +544,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=512
@@ -546,7 +565,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: tile
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [grid]
 resolution=512
@@ -571,7 +591,8 @@ size: 512x512
 seed: 1
 background: 1.0
 repeat: clamp
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -586,7 +607,8 @@ size: 512x512
 seed: 2
 background: 1.0
 repeat: clamp
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -601,7 +623,8 @@ size: 512x512
 seed: 3
 background: 1.0
 repeat: clamp
-post: blur=0.0, edge_blur=0.0, contrast=1.0, gamma=1.0
+invert: false
+post: blur=0.0, blur_spread=1.0, edge_blur=0.0, contrast=1.0, gamma=1.0
 
 [math]
 coords=uv
@@ -643,6 +666,27 @@ function extractScale(dslText: string): number {
   return match ? parseFloat(match[1]) : 1.0;
 }
 
+function extractInvert(dslText: string): boolean {
+  // Look for invert: in the header
+  const match = dslText.match(/^\s*invert\s*:\s*(true|false)/im);
+  return match ? match[1].toLowerCase() === 'true' : false;
+}
+
+function setInvertInDsl(dsl: string, invert: boolean): string {
+  if (/\binvert\s*:/i.test(dsl)) {
+    return dsl.replace(/(\binvert\s*:\s*)(true|false)/i, `$1${invert}`);
+  }
+  // Insert after repeat: line if it exists
+  if (/\brepeat\s*:/i.test(dsl)) {
+    return dsl.replace(/(\brepeat\s*:\s*\w+)/i, `$1\ninvert: ${invert}`);
+  }
+  // Otherwise insert after background line
+  if (/\bbackground\s*:/i.test(dsl)) {
+    return dsl.replace(/(\bbackground\s*:\s*[^\n]+)/i, `$1\ninvert: ${invert}`);
+  }
+  return `invert: ${invert}\n` + dsl;
+}
+
 export default function ProceduralTab() {
   const { updateTexture, canvasSize, proceduralDsl, setProceduralDsl, setProceduralRepeat } = useTexture();
   const [dsl, setDsl] = React.useState<string>(proceduralDsl || DEFAULT_DSL);
@@ -656,6 +700,7 @@ export default function ProceduralTab() {
   const [translateX, setTranslateX] = useState(() => extractTranslate(dsl).x);
   const [translateY, setTranslateY] = useState(() => extractTranslate(dsl).y);
   const [scale, setScale] = useState(() => extractScale(dsl));
+  const [invert, setInvert] = useState(() => extractInvert(dsl));
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [previewCanvas, setPreviewCanvas] = useState<HTMLCanvasElement | null>(null);
@@ -905,14 +950,14 @@ export default function ProceduralTab() {
   return (
     <div className="p-4 bg-white border-t border-gray-300">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold">Procedural Generator (DSL)</h3>
+        <h3 className="text-sm font-semibold text-gray-900">Procedural Generator (DSL)</h3>
         <div className={`text-xs ${status.startsWith('error') ? 'text-red-600 font-semibold' : 'text-gray-500'}`}>
           {status}
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-2 items-center">
-        <label className="text-xs text-gray-600">Engine</label>
+        <label className="text-xs text-gray-900 font-medium">Engine</label>
         <select
           value={engine}
           onChange={(e) => {
@@ -922,14 +967,14 @@ export default function ProceduralTab() {
             setDsl(next);
             setProceduralDsl(next);
           }}
-          className="px-2 py-1 border border-gray-300 rounded text-sm"
+          className="px-2 py-1 border border-gray-300 rounded text-sm bg-white text-gray-900"
         >
           <option value="math">Math</option>
           <option value="lsystem">L-system</option>
           <option value="cellular">Cellular</option>
         </select>
 
-        <label className="text-xs text-gray-600 ml-3">Presets</label>
+        <label className="text-xs text-gray-900 font-medium ml-3">Presets</label>
         <select
           value={presetKey}
           onChange={(e) => {
@@ -946,11 +991,12 @@ export default function ProceduralTab() {
                 setTranslateX(translate.x);
                 setTranslateY(translate.y);
                 setScale(extractScale(preset.dsl));
+                setInvert(extractInvert(preset.dsl));
                 setViewTransform({ offsetX: 0, offsetY: 0, scale: 1.0 });
               }
             }
           }}
-          className="px-2 py-1 border border-gray-300 rounded text-sm"
+          className="px-2 py-1 border border-gray-300 rounded text-sm bg-white text-gray-900"
         >
           <option value="">Select preset…</option>
           {PRESETS.map((group, gi) => (
@@ -965,7 +1011,7 @@ export default function ProceduralTab() {
       <textarea
         value={dsl}
         onChange={(e) => { setDsl(e.target.value); setProceduralDsl(e.target.value); }}
-        className="w-full h-48 p-2 border border-gray-300 rounded font-mono text-xs"
+        className="w-full h-48 p-2 border border-gray-300 rounded font-mono text-xs bg-white text-gray-900"
         spellCheck={false}
       />
       <div className="mt-2 flex flex-wrap gap-2 items-center">
@@ -990,7 +1036,7 @@ export default function ProceduralTab() {
         </button>
         
         <div className="ml-4 flex items-center gap-2">
-          <label className="text-xs text-gray-600">Scale:</label>
+          <label className="text-xs text-gray-900 font-medium">Scale:</label>
           <input
             type="number"
             value={scale.toFixed(3)}
@@ -1000,9 +1046,9 @@ export default function ProceduralTab() {
               updateScaleInDsl(val);
             }}
             step="0.1"
-            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm bg-white text-gray-900"
           />
-          <label className="text-xs text-gray-600">Offset X:</label>
+          <label className="text-xs text-gray-900 font-medium">Offset X:</label>
           <input
             type="number"
             value={translateX.toFixed(3)}
@@ -1012,9 +1058,9 @@ export default function ProceduralTab() {
               updateTranslateInDsl(val, translateY);
             }}
             step="0.1"
-            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm bg-white text-gray-900"
           />
-          <label className="text-xs text-gray-600">Y:</label>
+          <label className="text-xs text-gray-900 font-medium">Y:</label>
           <input
             type="number"
             value={translateY.toFixed(3)}
@@ -1024,12 +1070,12 @@ export default function ProceduralTab() {
               updateTranslateInDsl(translateX, val);
             }}
             step="0.1"
-            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm bg-white text-gray-900"
           />
         </div>
       </div>
       <div className="mt-4 flex flex-col items-center">
-        <label className="text-sm font-medium mb-2">Preview (drag to pan, scroll to zoom)</label>
+        <label className="text-sm font-medium text-gray-900 mb-2">Preview (drag to pan, scroll to zoom)</label>
         <canvas
           ref={canvasRef}
           width={256}

@@ -36,6 +36,7 @@ export function parseDSL(text: string): DSLDocument {
     seed: 1,
     background: 0.5,
     repeat: 'tile',
+    invert: false,
     post: {},
   };
 
@@ -108,6 +109,7 @@ export function parseDSL(text: string): DSLDocument {
             break;
           }
           case 'repeat': header.repeat = (value === 'tile' ? 'tile' : 'clamp'); break;
+          case 'invert': header.invert = value.toLowerCase() === 'true'; break;
           case 'post': header.post = parsePost(value); break;
           default: break;
         }

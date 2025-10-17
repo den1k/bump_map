@@ -19,10 +19,21 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
       case 'math': imageData = renderMath(doc); break;
       default: throw new Error(`Unknown engine: ${doc.engine}`);
     }
-    const { blur = 0, edge_blur = 0, contrast = 1, gamma = 1 } = doc.header.post || {};
-    if (blur && blur > 0) imageData = gaussianBlurGrayscale(imageData, blur);
+    const { blur = 0, blur_spread = 1.0, edge_blur = 0, contrast = 1, gamma = 1 } = doc.header.post || {};
+    if (blur && blur > 0) imageData = gaussianBlurGrayscale(imageData, blur, blur_spread);
     if (edge_blur && edge_blur > 0) imageData = edgeAwareBlur(imageData, Math.min(1, edge_blur));
     if (contrast !== 1 || gamma !== 1) applyContrastGamma(imageData.data, contrast, gamma);
+    
+    // Apply invert if requested
+    if (doc.header.invert) {
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = 255 - data[i];       // R
+        data[i + 1] = 255 - data[i + 1]; // G
+        data[i + 2] = 255 - data[i + 2]; // B
+        // Alpha unchanged
+      }
+    }
 
     const payload: WorkerResponseDone = {
       type: 'done',

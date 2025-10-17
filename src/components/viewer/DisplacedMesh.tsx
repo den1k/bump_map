@@ -45,8 +45,12 @@ export default function DisplacedMesh() {
       THREE.UnsignedByteType
     );
     texture.needsUpdate = true;
-    texture.wrapS = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
-    texture.wrapT = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+    // Use MirroredRepeatWrapping for smooth edge transitions without clamping or hard seams
+    texture.wrapS = THREE.MirroredRepeatWrapping;
+    texture.wrapT = THREE.MirroredRepeatWrapping;
+    // Add linear filtering for smoother displacement sampling
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
     texture.flipY = true;
     
     // Store average for logging
@@ -85,8 +89,9 @@ export default function DisplacedMesh() {
   // Update texture properties when repeat changes
   useEffect(() => {
     if (displacementTexture && materialRef.current) {
-      displacementTexture.wrapS = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
-      displacementTexture.wrapT = proceduralRepeat === 'tile' ? THREE.RepeatWrapping : THREE.ClampToEdgeWrapping;
+      // Use MirroredRepeatWrapping for smooth edge transitions
+      displacementTexture.wrapS = THREE.MirroredRepeatWrapping;
+      displacementTexture.wrapT = THREE.MirroredRepeatWrapping;
       materialRef.current.needsUpdate = true;
     }
   }, [displacementTexture, proceduralRepeat]);

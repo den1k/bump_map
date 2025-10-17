@@ -15,15 +15,15 @@ export function applyContrastGamma(data: Uint8ClampedArray, contrast: number, ga
   }
 }
 
-export function gaussianBlurGrayscale(imageData: ImageData, sigma: number): ImageData {
+export function gaussianBlurGrayscale(imageData: ImageData, sigma: number, spread: number = 1.0): ImageData {
   if (sigma <= 0) return imageData;
   const { width, height, data } = imageData;
-  // build 1D kernel
-  const radius = Math.max(1, Math.floor(sigma * 3));
+  // build 1D kernel with spread factor
+  const radius = Math.max(1, Math.floor(sigma * 3 * spread));
   const kernel = new Float32Array(radius * 2 + 1);
   let sum = 0;
   for (let i = -radius; i <= radius; i++) {
-    const v = Math.exp(-(i * i) / (2 * sigma * sigma));
+    const v = Math.exp(-(i * i) / (2 * sigma * sigma * spread * spread));
     kernel[i + radius] = v; sum += v;
   }
   for (let i = 0; i < kernel.length; i++) kernel[i] /= sum;
