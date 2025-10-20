@@ -415,7 +415,7 @@ translate=0.0,0.0
     items: [
       { label: 'Game of Life', dsl: `engine: cellular
 size: 512x512
-seed: 1
+seed: 42
 background: 1.0
 repeat: tile
 invert: false
@@ -426,17 +426,17 @@ resolution=128
 wrap=true
 neighborhood=moore:1
 states=2
-init=rand:0.5
+init=rand:0.25
 spacing=1
 life=B3/S23
-iterations=120
+iterations=200
 shade=state(0)=1.0, state(1)=0.0
 scale=1.0
 translate=0.0,0.0
 ` },
       { label: 'HighLife', dsl: `engine: cellular
 size: 512x512
-seed: 1
+seed: 42
 background: 1.0
 repeat: tile
 invert: false
@@ -447,17 +447,17 @@ resolution=128
 wrap=true
 neighborhood=moore:1
 states=2
-init=rand:0.5
+init=rand:0.25
 spacing=1
 life=B36/S23
-iterations=120
+iterations=200
 shade=state(0)=1.0, state(1)=0.0
 scale=1.0
 translate=0.0,0.0
 ` },
       { label: 'Seeds', dsl: `engine: cellular
 size: 512x512
-seed: 1
+seed: 42
 background: 1.0
 repeat: tile
 invert: false
@@ -468,17 +468,17 @@ resolution=128
 wrap=true
 neighborhood=moore:1
 states=2
-init=rand:0.5
+init=rand:0.25
 spacing=1
 life=B2/S
-iterations=120
+iterations=200
 shade=state(0)=1.0, state(1)=0.0
 scale=1.0
 translate=0.0,0.0
 ` },
       { label: 'Maze', dsl: `engine: cellular
 size: 512x512
-seed: 1
+seed: 42
 background: 1.0
 repeat: tile
 invert: false
@@ -489,10 +489,10 @@ resolution=128
 wrap=true
 neighborhood=moore:1
 states=2
-init=rand:0.5
+init=rand:0.25
 spacing=1
 life=B3/S12345
-iterations=300
+iterations=500
 shade=state(0)=1.0, state(1)=0.0
 scale=1.0
 translate=0.0,0.0
